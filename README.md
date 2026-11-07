@@ -119,23 +119,3 @@ Esse comando remove os executáveis `analista` e `controlador`, além de `lng.tx
 Com a implementação presente neste repositório, `make clean`, `make` e `make test` foram executados com sucesso em ambiente Linux. O cenário automatizado verifica o fluxo com 25 PIDs fictícios e o encerramento normal do Analista.
 
 Isso não substitui testes adicionais com arquivos vazios e lotes de 1, 9, 10 e 11 PIDs, testes de concorrência entre processos ou a integração com o Atendimento completo.
-
-## Observações para integração
-
-- O Atendimento e o Analista precisam executar com o mesmo diretório de trabalho, para acessar o mesmo `lng.txt` e `lng.txt.tmp`.
-- O semáforo `/sem_block` deve permanecer disponível enquanto houver processos utilizando o Logger. O processo responsável por criá-lo deve removê-lo somente depois que o Analista tiver terminado.
-- O Atendimento deve aguardar o Analista voltar ao estado suspenso antes de enviar uma nova ativação. Sinais padrão não devem ser tratados como uma fila de notificações.
-- A implementação atual de `logger_process_batch()` remove os PIDs do LNG antes de devolvê-los ao Analista para impressão. Portanto, ela cobre o fluxo normal do teste, mas ainda não oferece confirmação posterior da impressão caso o Analista falhe entre a leitura e a exibição do lote.
-- A integração com o escalonador de threads do Atendimento precisa considerar que `waitpid()` bloqueante pode bloquear o processo inteiro em modelos de threads implementadas em espaço de usuário.
-
-## Estado do desenvolvimento
-
-- [x] Interface inicial do Logger;
-- [x] Registro de PIDs no LNG;
-- [x] Leitura e remoção de lotes;
-- [x] Sincronização do arquivo com semáforo nomeado;
-- [x] Processo Analista com ativação por sinais;
-- [x] Controlador para teste isolado com 25 PIDs;
-- [ ] Testes automatizados para diferentes tamanhos de lote;
-- [ ] Protocolo de confirmação da impressão dos lotes;
-- [ ] Integração com o processo Atendimento e seu escalonador.
